@@ -82,7 +82,7 @@ const STRINGS = {
     done: "Done",
     chooseTheme: "Choose Theme Color",
     dontUseThemeIcon: "Don't Use Theme Color for Icon",
-    dontUseThemeIconHint: "Controls the little \"%\" mark next to the app name at the top of the screen — themed follows your palette, off keeps it neutral gray.",
+    dontUseThemeIconHint: "Controls the little \"$\" mark next to the app name at the top of the screen — themed follows your palette, off keeps it neutral gray.",
     addAccountHeader: "Add Account",
     shareTitle: "Share", saveImage: "Save image", preparing: "Preparing…",
     myInvestment: "My Investment", myLiquidity: "My Liquidity", myNetWorth: "My Net Worth", myAssetGrowth: "My Asset Growth",
@@ -155,7 +155,7 @@ const STRINGS = {
     done: "完成",
     chooseTheme: "選擇主題顏色",
     dontUseThemeIcon: "圖示不使用主題顏色",
-    dontUseThemeIconHint: "控制畫面頂部應用程式名稱旁的小「%」圖示 — 開啟會跟隨主題色彩，關閉則保持中性灰色。",
+    dontUseThemeIconHint: "控制畫面頂部應用程式名稱旁的小「$」圖示 — 開啟會跟隨主題色彩，關閉則保持中性灰色。",
     addAccountHeader: "新增帳戶",
     shareTitle: "分享", saveImage: "儲存圖片", preparing: "準備中…",
     myInvestment: "我的投資", myLiquidity: "我的流動資金", myNetWorth: "我的淨資產", myAssetGrowth: "我的資產增長",
@@ -200,7 +200,7 @@ const SHARE_BRAND = {
   networth: "#3FAE6B",
   assets: "#3FAE6B",
 };
-const APP_NAME = "Ledger";
+const APP_NAME = "FINTRACK";
 const APP_TAGLINE = "Net Worth Tracker";
 
 // ---- account subtypes (mirrors the reference app's "Add Account" list) ---
@@ -1161,7 +1161,7 @@ function AccountModal({ open, onClose, onSave, onDelete, categories, initial, ra
 }
 
 // ---- stock holding modal ------------------------------------------------
-const SUGGESTED_STOCK_TAGS = ["Major ETF", "Mag-7", "High Div", "Crypto", "Metals", "Others"];
+const SUGGESTED_STOCK_TAGS = ["Major ETF", "Mag-7", "Crypto", "Metals", "Others"];
 const SUGGESTED_BROKERS = ["IBKR", "Futubull", "Tiger", "First Trade", "Others"];
 
 function StockModal({ open, onClose, onSave, onDelete, categoryId, rates, initial, existingTags, existingBrokers, diagnostics }) {
@@ -1506,7 +1506,7 @@ function ThemeModal({ open, onClose, themeId, onSelect, iconThemed, onToggleIcon
               width: 34, height: 34,
               background: iconThemed ? `linear-gradient(135deg, ${themeById(themeId).colors[1]}, ${themeById(themeId).colors[0]})` : COLORS.rule,
             }}>
-              <span style={{ fontFamily: "Fraunces, serif", fontWeight: 600, fontSize: 13, color: iconThemed ? "#fff" : COLORS.inkSoft }}>%</span>
+              <span style={{ fontFamily: "Fraunces, serif", fontWeight: 600, fontSize: 13, color: iconThemed ? "#fff" : COLORS.inkSoft }}>$</span>
             </div>
             <span className="flex items-center justify-center rounded-full" style={{ width: 20, height: 20, border: `1px solid ${COLORS.rule}` }}>
               {!iconThemed && <Check size={12} color={COLORS.ink} />}
@@ -1628,8 +1628,12 @@ function ShareCardModal({ open, onClose, brandColor, title, periodLabel, narrati
               <text key={i} x={chartX + ((i + 0.5) / chartData.length) * chartW} y={chartY + chartH + 28} textAnchor="middle" fontFamily="Arial, sans-serif" fontSize="16" fill="#999">{d.label}</text>
             ))}
 
-            <text x={56} y="1220" fontFamily="Georgia, serif" fontWeight="700" fontSize="34" fill="#141414">{APP_NAME}</text>
-            <text x={56} y="1256" fontFamily="Arial, sans-serif" fontSize="20" fill="#666">{APP_TAGLINE}</text>
+            <g transform="translate(56, 1178)">
+              <rect x="0" y="0" width="42" height="42" rx="10" fill={brandColor} />
+              <text x="21" y="28" textAnchor="middle" fontFamily="Georgia, serif" fontWeight="700" fontSize="20" fill="#fff">$</text>
+            </g>
+            <text x={112} y="1206" fontFamily="Georgia, serif" fontWeight="700" fontSize="34" fill="#141414" letterSpacing="1">{APP_NAME}</text>
+            <text x={112} y="1240" fontFamily="Arial, sans-serif" fontSize="18" fill="#666">{APP_TAGLINE}</text>
             <g transform={`translate(${W - 56 - 90}, 1180)`}>
               <rect x="0" y="0" width="90" height="90" rx="8" fill="none" stroke="#ddd" strokeWidth="2" />
               {grid.map((on, i) => {
@@ -2454,7 +2458,7 @@ export default function App() {
               width: 22, height: 22,
               background: iconThemed ? `linear-gradient(135deg, ${themeById(themeId).colors[1]}, ${themeById(themeId).colors[0]})` : COLORS.rule,
             }}>
-              <span style={{ fontFamily: "Fraunces, serif", fontWeight: 600, fontSize: 11, color: iconThemed ? "#fff" : COLORS.inkSoft }}>%</span>
+              <span style={{ fontFamily: "Fraunces, serif", fontWeight: 600, fontSize: 11, color: iconThemed ? "#fff" : COLORS.inkSoft }}>$</span>
             </span>
             <span style={{ fontFamily: "Fraunces, serif", fontSize: 15, letterSpacing: 1.5, color: COLORS.inkSoft, textTransform: "uppercase" }}>FinTrack</span>
           </div>
