@@ -36,11 +36,11 @@ const STRINGS = {
     tabAssets: "Assets", tabMix: "Mix", tabPnl: "P & L", tabTrend: "Trend",
     netWorth: "Net Worth",
     catName_cash: "Cash Equivalents", catName_invest: "Investment", catName_property: "Property",
-    catName_receivable: "Receivable", catName_liability: "Liability",
-    subtype_cash_cash: "Cash", subtype_cash_digitalWallet: "Digital Wallet", subtype_cash_debitCard: "Debit Card", subtype_cash_otherCash: "Other",
+    catName_receivable: "MPF", catName_liability: "Liability",
+    subtype_cash_cash: "Cash", subtype_cash_digitalWallet: "Digital Wallet", subtype_cash_debitCard: "Debit Card", subtype_cash_dividends: "Dividends", subtype_cash_otherCash: "Others",
     subtype_invest_stock: "Stocks", subtype_invest_treasury: "Treasuries",
     subtype_property_house: "House", subtype_property_car: "Car", subtype_property_otherProperty: "Other Property",
-    subtype_receivable_commonReceivable: "Common Receivable",
+    subtype_receivable_commonReceivable: "MPF Account",
     subtype_liability_creditCard: "Credit Card", subtype_liability_loan: "Loan", subtype_liability_payable: "Payable", subtype_liability_otherLiability: "Other Liability",
     accounts: (n) => `${n} account${n !== 1 ? "s" : ""}`, updated: (d) => `updated ${d}`,
     addAccount: "Add account", addStocks: "Add Stocks", addTreasuries: "Add Treasuries",
@@ -63,6 +63,7 @@ const STRINGS = {
     addStockHolding: "Add stock holding", editHolding: "Edit holding",
     marketSlashCurrency: (label, cur) => `${label} Market / ${cur}`,
     ticker: "Ticker", tag: "Tag (optional)", unitsLabel: "Units",
+    broker: "Broker / Platform (optional)", unassignedBroker: "Unassigned",
     avgCost: (cur) => `Average cost per unit (optional, ${cur})`,
     willSyncAs: (s) => `Will sync as ${s}`,
     priceSource: "Price source", autoSync: "Auto-sync", manual: "Manual",
@@ -74,9 +75,10 @@ const STRINGS = {
     settings: "Settings", themeColor: "Theme color", language: "Language",
     hiddenCategories: "Hidden categories", show: "Show",
     finnhubKey: "Finnhub API key (optional)", finnhubPh: "Paste your key from finnhub.io",
+    usingSharedKey: "Automatically using this app's shared key — no setup needed.",
     remove: "Remove", save: "Save", saveFinnhub: "Save Finnhub key",
     alltickToken: "AllTick token (optional)", alltickPh: "Paste your token from alltick.co", saveAlltick: "Save AllTick token",
-    settingsCopy: "On sync, each holding tries Finnhub → AllTick → Yahoo Finance's public feed → Stooq, in that order, stopping at the first one that returns a price — four independent sources so a block or outage on any one doesn't stop live prices. AllTick specifically covers US, HK, and A-shares (free token at alltick.co), but its free plan is rate-limited to about 1 request/10 seconds across your whole account, so with several holdings only some will get an AllTick price on a given sync — the rest automatically fall through to Yahoo/Stooq, same as always. Hong Kong tickers are auto-formatted per source. A holding only shows simulated if every source returns nothing — tap into a holding to see its \"Last sync attempt\" panel for the exact reason, right there in the app.",
+    settingsCopy: "No setup needed by default: US holdings sync via Finnhub (this app already includes a shared key), HK holdings sync via Yahoo Finance's public feed — both work automatically for everyone, no key required. Behind the scenes there are 4 sources total (Finnhub, AllTick, Yahoo, Stooq), tried in the order most likely to work for that market, stopping at the first one that returns a price, so a block or outage on any single source doesn't stop live prices. AllTick (free token at alltick.co) and your own Finnhub key are both optional extras if you want a second/faster source — your own key always takes priority over the shared one. Hong Kong tickers are auto-formatted per source. A holding only shows simulated if every source returns nothing — tap into a holding to see its \"Last sync attempt\" panel for the exact reason, right there in the app.",
     done: "Done",
     chooseTheme: "Choose Theme Color",
     dontUseThemeIcon: "Don't Use Theme Color for Icon",
@@ -107,11 +109,11 @@ const STRINGS = {
     tabAssets: "資產", tabMix: "配置", tabPnl: "損益", tabTrend: "趨勢",
     netWorth: "淨資產",
     catName_cash: "現金及等價物", catName_invest: "投資", catName_property: "物業",
-    catName_receivable: "應收款項", catName_liability: "負債",
-    subtype_cash_cash: "現金", subtype_cash_digitalWallet: "電子錢包", subtype_cash_debitCard: "扣賬卡", subtype_cash_otherCash: "其他",
+    catName_receivable: "強積金", catName_liability: "負債",
+    subtype_cash_cash: "現金", subtype_cash_digitalWallet: "電子錢包", subtype_cash_debitCard: "扣賬卡", subtype_cash_dividends: "股息", subtype_cash_otherCash: "其他",
     subtype_invest_stock: "股票", subtype_invest_treasury: "國債",
     subtype_property_house: "房屋", subtype_property_car: "汽車", subtype_property_otherProperty: "其他物業",
-    subtype_receivable_commonReceivable: "一般應收款項",
+    subtype_receivable_commonReceivable: "強積金戶口",
     subtype_liability_creditCard: "信用卡", subtype_liability_loan: "貸款", subtype_liability_payable: "應付款項", subtype_liability_otherLiability: "其他負債",
     accounts: (n) => `${n} 個帳戶`, updated: (d) => `更新於 ${d}`,
     addAccount: "新增帳戶", addStocks: "新增股票", addTreasuries: "新增國債",
@@ -134,6 +136,7 @@ const STRINGS = {
     addStockHolding: "新增股票持倉", editHolding: "編輯持股",
     marketSlashCurrency: (label, cur) => `${label}市場 / ${cur}`,
     ticker: "股票代號", tag: "標籤（可選）", unitsLabel: "股數",
+    broker: "券商 / 平台（可選）", unassignedBroker: "未分配",
     avgCost: (cur) => `平均成本（可選，${cur}）`,
     willSyncAs: (s) => `將以 ${s} 同步`,
     priceSource: "價格來源", autoSync: "自動同步", manual: "手動",
@@ -145,9 +148,10 @@ const STRINGS = {
     settings: "設定", themeColor: "主題顏色", language: "語言",
     hiddenCategories: "已隱藏的類別", show: "顯示",
     finnhubKey: "Finnhub API 金鑰（可選）", finnhubPh: "貼上你於 finnhub.io 取得的金鑰",
+    usingSharedKey: "已自動使用本應用程式的共用金鑰 — 無需自行設定。",
     remove: "移除", save: "儲存", saveFinnhub: "儲存 Finnhub 金鑰",
     alltickToken: "AllTick 權杖（可選）", alltickPh: "貼上你於 alltick.co 取得的權杖", saveAlltick: "儲存 AllTick 權杖",
-    settingsCopy: "同步時，每項持股會依序嘗試 Finnhub → AllTick → Yahoo Finance 公開報價 → Stooq，一取得報價即停止 — 四個獨立來源，確保單一來源被封鎖或故障時仍能取得即時報價。AllTick 特別覆蓋美股、港股及A股（可於 alltick.co 免費取得權杖），但其免費方案限制每10秒約1次請求，若持有多項股票，同一次同步中只有部分能取得 AllTick 報價 — 其餘會自動改用 Yahoo/Stooq。港股代號會依各來源自動調整格式。只有全部來源均無回應時才會顯示模擬價格 — 點入個別持股可查看「上次同步嘗試」，了解確實原因。",
+    settingsCopy: "預設無需任何設定：美股持倉透過 Finnhub 同步（本應用程式已內建共用金鑰），港股持倉透過 Yahoo Finance 公開報價同步 — 兩者對所有人自動生效，無需金鑰。背後其實有 4 個來源（Finnhub、AllTick、Yahoo、Stooq），會依該市場最可能成功的順序嘗試，一取得報價即停止，確保單一來源被封鎖或故障時仍能取得即時報價。AllTick（可於 alltick.co 免費取得權杖）及你自己的 Finnhub 金鑰皆為可選的額外來源，若已設定，你自己的金鑰會優先於共用金鑰使用。港股代號會依各來源自動調整格式。只有全部來源均無回應時才會顯示模擬價格 — 點入個別持股可查看「上次同步嘗試」，了解確實原因。",
     done: "完成",
     chooseTheme: "選擇主題顏色",
     dontUseThemeIcon: "圖示不使用主題顏色",
@@ -203,9 +207,10 @@ const APP_TAGLINE = "Net Worth Tracker";
 const SUBTYPES = {
   cash: [
     { id: "cash", label: "Cash", icon: Wallet },
-    { id: "digitalWallet", label: "Digital Wallet", icon: Smartphone },
     { id: "debitCard", label: "Debit Card", icon: CreditCard },
-    { id: "otherCash", label: "Other", icon: MoreHorizontal },
+    { id: "digitalWallet", label: "Digital Wallet", icon: Smartphone },
+    { id: "dividends", label: "Dividends", icon: DollarSign },
+    { id: "otherCash", label: "Others", icon: MoreHorizontal },
   ],
   invest: [
     { id: "stock", label: "Stocks", icon: BarChart3 },
@@ -275,7 +280,25 @@ function categoryColor(category, theme) {
   if (category.id === "receivable") return mixHex(theme.colors[0], theme.colors[2], 0.5);
   return category.color;
 }
-const CATEGORY_ICON = { cash: Wallet, invest: TrendingUp, property: Building2, receivable: Users, liability: CreditCard };
+const CATEGORY_ICON = { cash: Wallet, invest: TrendingUp, property: Building2, receivable: PiggyBank, liability: CreditCard };
+
+// gives each stock tag its own shade of the same base color (e.g. the
+// Investment category accent), so tags are visually distinct at a glance
+// but still read as one consistent color family rather than random hues.
+// Same tag always maps to the same shade.
+function tagColor(tag, baseHex) {
+  if (!tag) return baseHex;
+  const shades = [
+    mixHex(baseHex, "#000000", 0.4),
+    mixHex(baseHex, "#000000", 0.18),
+    baseHex,
+    mixHex(baseHex, "#ffffff", 0.35),
+    mixHex(baseHex, "#ffffff", 0.6),
+  ];
+  let h = 0;
+  for (let i = 0; i < tag.length; i++) h = (h * 31 + tag.charCodeAt(i)) >>> 0;
+  return shades[h % shades.length];
+}
 
 // ---- auto transactions (recurring income / expense) -----------------
 function advanceDate(iso, recurrence) {
@@ -396,6 +419,15 @@ const SEED_PRICES = {
 };
 
 const FALLBACK_RATES = { USD: 1, HKD: 7.82 }; // HKD per 1 USD
+
+// ---- shared price-sync key ------------------------------------------------
+// Fill this in with ONE free Finnhub API key (finnhub.io -> sign up, no card
+// needed -> Dashboard -> copy your key) so EVERY visitor gets live US quotes
+// automatically, with nobody needing to open Settings. Leave it blank and
+// the app still works fine — US quotes just fall back to Yahoo/Stooq like HK
+// already does. Anyone can still add their own personal key in Settings,
+// which always takes priority over this shared one.
+const SHARED_FINNHUB_KEY = "";
 const CURRENCY_SYMBOL = { USD: "$", HKD: "HK$" };
 
 function seedPriceFor(ticker) {
@@ -510,26 +542,40 @@ async function fetchAllTickQuote(ticker, market, token) {
 
 async function fetchLiveQuote(ticker, market, apiKey, allTickToken) {
   const attempts = [];
-  if (apiKey) {
+  const tryFinnhub = async () => {
+    if (!apiKey) { attempts.push({ source: "Finnhub", detail: "no key set — skipped" }); return null; }
     const r = await fetchFinnhubQuote(ticker, market, apiKey);
     attempts.push({ source: "Finnhub", detail: r.detail });
-    if (r.price != null) return { price: r.price, source: "Finnhub", attempts };
-  } else {
-    attempts.push({ source: "Finnhub", detail: "no key set — skipped" });
-  }
-  if (allTickToken) {
+    return r.price;
+  };
+  const tryYahoo = async () => {
+    const r = await fetchYahooQuote(ticker, market);
+    attempts.push({ source: "Yahoo", detail: r.detail });
+    return r.price;
+  };
+  const tryAllTick = async () => {
+    if (!allTickToken) { attempts.push({ source: "AllTick", detail: "no token set — skipped" }); return null; }
     const r = await fetchAllTickQuote(ticker, market, allTickToken);
     attempts.push({ source: "AllTick", detail: r.detail });
-    if (r.price != null) return { price: r.price, source: "AllTick", attempts };
-  } else {
-    attempts.push({ source: "AllTick", detail: "no token set — skipped" });
+    return r.price;
+  };
+  const tryStooq = async () => {
+    const r = await fetchStooqQuote(ticker, market);
+    attempts.push({ source: "Stooq", detail: r.detail });
+    return r.price;
+  };
+
+  // US: Finnhub is genuinely reliable here, so try it first (shared or your
+  // own key). HK/China: Finnhub's free tier rarely covers these exchanges,
+  // so skip straight to Yahoo, which does.
+  const order = market === "US" ? [tryFinnhub, tryYahoo, tryAllTick, tryStooq] : [tryYahoo, tryFinnhub, tryAllTick, tryStooq];
+  for (const attempt of order) {
+    const price = await attempt();
+    if (price != null) {
+      const last = attempts[attempts.length - 1];
+      return { price, source: last.source, attempts };
+    }
   }
-  const y = await fetchYahooQuote(ticker, market);
-  attempts.push({ source: "Yahoo", detail: y.detail });
-  if (y.price != null) return { price: y.price, source: "Yahoo", attempts };
-  const s = await fetchStooqQuote(ticker, market);
-  attempts.push({ source: "Stooq", detail: s.detail });
-  if (s.price != null) return { price: s.price, source: "Stooq", attempts };
   return { price: null, source: null, attempts };
 }
 
@@ -672,7 +718,7 @@ async function loadState() {
   }
   try {
     const r = await window.storage.get("ledger:finnhubKey");
-    apiKey = r ? r.value : "";
+    apiKey = r && r.value ? r.value : "";
   } catch {
     apiKey = "";
   }
@@ -863,11 +909,12 @@ function AccountTypeSheet({ open, onClose, categories, theme, onPick }) {
   );
 }
 
-function AccountModal({ open, onClose, onSave, onDelete, categories, initial, rates, presetSubtype, onAddStockInstead }) {
+function AccountModal({ open, onClose, onSave, onDelete, categories, initial, rates, presetSubtype, onAddStockInstead, existingBrokers }) {
   const [categoryId, setCategoryId] = useState(initial?.categoryId || categories[0]?.id);
   const [subtype, setSubtype] = useState(initial?.subtype || presetSubtype || defaultSubtype(initial?.categoryId || categories[0]?.id));
   const [name, setName] = useState(initial?.name || "");
   const [note, setNote] = useState(initial?.note || "");
+  const [broker, setBroker] = useState(initial?.broker || "");
   const [currency, setCurrency] = useState(initial?.currency || presetCurrency(initial?.categoryId || categories[0]?.id));
   const [nativeValue, setNativeValue] = useState(
     initial?.nativeValue != null ? String(Math.round(initial.nativeValue)) : initial?.value != null ? String(Math.round(initial.value)) : ""
@@ -890,6 +937,7 @@ function AccountModal({ open, onClose, onSave, onDelete, categories, initial, ra
       setSubtype(initial?.subtype || presetSubtype || defaultSubtype(cid));
       setName(initial?.name || "");
       setNote(initial?.note || "");
+      setBroker(initial?.broker || "");
       setCurrency(initial?.currency || presetCurrency(cid));
       setNativeValue(initial?.nativeValue != null ? String(Math.round(initial.nativeValue)) : initial?.value != null ? String(Math.round(initial.value)) : "");
       setRecurrences(initial?.recurrences || []);
@@ -972,6 +1020,24 @@ function AccountModal({ open, onClose, onSave, onDelete, categories, initial, ra
         <label style={{ fontFamily: "Inter", fontSize: 12, color: COLORS.inkSoft }}>{t("note")}</label>
         <input value={note} onChange={(e) => setNote(e.target.value)} placeholder={t("notePh")} className="w-full mt-1 mb-3 px-3 py-2 rounded-lg"
           style={{ fontFamily: "Inter", fontSize: 14, border: `1px solid ${COLORS.rule}`, color: COLORS.ink }} />
+
+        {categoryId === "invest" && (
+          <>
+            <label style={{ fontFamily: "Inter", fontSize: 12, color: COLORS.inkSoft }}>{t("broker")}</label>
+            <input value={broker} onChange={(e) => setBroker(e.target.value)}
+              className="w-full mt-1 mb-2 px-3 py-2 rounded-lg" style={{ fontFamily: "Inter", fontSize: 14, border: `1px solid ${COLORS.rule}`, color: COLORS.ink }} />
+            {Array.from(new Set([...SUGGESTED_BROKERS, ...(existingBrokers || [])])).length > 0 && (
+              <div className="flex gap-1.5 flex-wrap mb-3">
+                {Array.from(new Set([...SUGGESTED_BROKERS, ...(existingBrokers || [])])).map((bk) => (
+                  <button key={bk} onClick={() => setBroker(bk === broker ? "" : bk)} className="px-2.5 py-1 rounded-full"
+                    style={{ fontFamily: "Inter", fontSize: 11.5, fontWeight: 500, border: `1px solid ${broker === bk ? COLORS.ink : COLORS.rule}`, background: broker === bk ? COLORS.ink : "transparent", color: broker === bk ? "#fff" : COLORS.ink }}>
+                    {bk}
+                  </button>
+                ))}
+              </div>
+            )}
+          </>
+        )}
 
         <div className="flex items-center justify-between mb-1 mt-1">
           <label style={{ fontFamily: "Inter", fontSize: 12, color: COLORS.inkSoft }}>{t("value", currency)}</label>
@@ -1081,7 +1147,7 @@ function AccountModal({ open, onClose, onSave, onDelete, categories, initial, ra
             </button>
           )}
           <button disabled={!canSave} onClick={() => onSave({
-            id: initial?.id || uid(), categoryId, subtype, name: name.trim(), note: note.trim(),
+            id: initial?.id || uid(), categoryId, subtype, name: name.trim(), note: note.trim(), broker: broker.trim() || undefined,
             currency, nativeValue: Number(nativeValue), value: nativeToUsd(Number(nativeValue), currency, rates || FALLBACK_RATES),
             recurrences, updatedAt: todayISO(),
           })}
@@ -1095,14 +1161,16 @@ function AccountModal({ open, onClose, onSave, onDelete, categories, initial, ra
 }
 
 // ---- stock holding modal ------------------------------------------------
-const SUGGESTED_STOCK_TAGS = ["Mag-7", "Crypto", "Metals", "Major ETF", "Dividends"];
+const SUGGESTED_STOCK_TAGS = ["Major ETF", "Mag-7", "High Div", "Crypto", "Metals", "Others"];
+const SUGGESTED_BROKERS = ["IBKR", "Futubull", "Tiger", "First Trade", "Others"];
 
-function StockModal({ open, onClose, onSave, onDelete, categoryId, rates, initial, existingTags, diagnostics }) {
+function StockModal({ open, onClose, onSave, onDelete, categoryId, rates, initial, existingTags, existingBrokers, diagnostics }) {
   const [ticker, setTicker] = useState(initial?.ticker || "");
   const [market, setMarket] = useState(initial?.market || "US");
   const [units, setUnits] = useState(initial?.units != null ? String(initial.units) : "");
   const [avgCost, setAvgCost] = useState(initial?.avgCost != null ? String(initial.avgCost) : "");
   const [tag, setTag] = useState(initial?.tag || "");
+  const [broker, setBroker] = useState(initial?.broker || "");
   const [manualMode, setManualMode] = useState(initial?.priceSource === "manual");
   const [manualPrice, setManualPrice] = useState(initial?.priceSource === "manual" && initial?.nativePrice != null ? String(initial.nativePrice) : "");
   const { t } = useLang();
@@ -1114,6 +1182,7 @@ function StockModal({ open, onClose, onSave, onDelete, categoryId, rates, initia
       setUnits(initial?.units != null ? String(initial.units) : "");
       setAvgCost(initial?.avgCost != null ? String(initial.avgCost) : "");
       setTag(initial?.tag || "");
+      setBroker(initial?.broker || "");
       setManualMode(initial?.priceSource === "manual");
       setManualPrice(initial?.priceSource === "manual" && initial?.nativePrice != null ? String(initial.nativePrice) : "");
     }
@@ -1128,6 +1197,7 @@ function StockModal({ open, onClose, onSave, onDelete, categoryId, rates, initia
   const autoPrice = initial?.ticker === cleanTicker ? initial.nativePrice : seedPriceFor(cleanTicker || "?");
   const previewPrice = manualMode ? (Number(manualPrice) || 0) : autoPrice;
   const tagChips = Array.from(new Set([...SUGGESTED_STOCK_TAGS, ...(existingTags || [])]));
+  const brokerChips = Array.from(new Set([...SUGGESTED_BROKERS, ...(existingBrokers || [])]));
 
   const handleSave = () => {
     const nativePrice = manualMode
@@ -1143,6 +1213,7 @@ function StockModal({ open, onClose, onSave, onDelete, categoryId, rates, initia
       units: Number(units),
       avgCost: avgCost.trim() ? Number(avgCost) : undefined,
       tag: tag.trim() || undefined,
+      broker: broker.trim() || undefined,
       nativePrice,
       priceSource: manualMode ? "manual" : initial?.priceSource,
       value: stockUsdValue(nativePrice, Number(units), currency, rates),
@@ -1186,6 +1257,20 @@ function StockModal({ open, onClose, onSave, onDelete, categoryId, rates, initia
               <button key={tg} onClick={() => setTag(tg === tag ? "" : tg)} className="px-2.5 py-1 rounded-full"
                 style={{ fontFamily: "Inter", fontSize: 11.5, fontWeight: 500, border: `1px solid ${tag === tg ? COLORS.ink : COLORS.rule}`, background: tag === tg ? COLORS.ink : "transparent", color: tag === tg ? "#fff" : COLORS.ink }}>
                 {tg}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <label style={{ fontFamily: "Inter", fontSize: 12, color: COLORS.inkSoft }}>{t("broker")}</label>
+        <input value={broker} onChange={(e) => setBroker(e.target.value)}
+          className="w-full mt-1 mb-2 px-3 py-2 rounded-lg" style={{ fontFamily: "Inter", fontSize: 13.5, border: `1px solid ${COLORS.rule}`, color: COLORS.ink }} />
+        {brokerChips.length > 0 && (
+          <div className="flex gap-1.5 flex-wrap mb-3">
+            {brokerChips.map((bk) => (
+              <button key={bk} onClick={() => setBroker(bk === broker ? "" : bk)} className="px-2.5 py-1 rounded-full"
+                style={{ fontFamily: "Inter", fontSize: 11.5, fontWeight: 500, border: `1px solid ${broker === bk ? COLORS.ink : COLORS.rule}`, background: broker === bk ? COLORS.ink : "transparent", color: broker === bk ? "#fff" : COLORS.ink }}>
+                {bk}
               </button>
             ))}
           </div>
@@ -1325,6 +1410,9 @@ function SettingsModal({ open, onClose, apiKey, onSave, allTickToken, onSaveAllT
         )}
 
         <label style={{ fontFamily: "Inter", fontSize: 12, color: COLORS.inkSoft }}>{t("finnhubKey")}</label>
+        {!apiKey && SHARED_FINNHUB_KEY && (
+          <div style={{ fontFamily: "Inter", fontSize: 11, color: COLORS.sage, marginTop: 2, marginBottom: 4 }}>{t("usingSharedKey")}</div>
+        )}
         <input value={draft} onChange={(e) => setDraft(e.target.value.trim())} placeholder={t("finnhubPh")}
           className="w-full mt-1 mb-2 px-3 py-2 rounded-lg" style={{ fontFamily: "IBM Plex Mono", fontSize: 13, border: `1px solid ${COLORS.rule}`, color: COLORS.ink }} />
         <div className="flex gap-2 mb-4">
@@ -1730,7 +1818,7 @@ function CategoryCard({ category, theme, formatDisplay, onRowClick, onAdd, onAdd
                             {MARKETS[a.market].label}
                           </span>
                           {a.tag && (
-                            <span style={{ fontFamily: "Inter", fontWeight: 600, fontSize: 10.5, color, background: color + "1A", borderRadius: 4, padding: "1px 5px" }}>
+                            <span style={{ fontFamily: "Inter", fontWeight: 600, fontSize: 10.5, color: tagColor(a.tag, color), background: tagColor(a.tag, color) + "1A", borderRadius: 4, padding: "1px 5px" }}>
                               {a.tag}
                             </span>
                           )}
@@ -1766,7 +1854,35 @@ function CategoryCard({ category, theme, formatDisplay, onRowClick, onAdd, onAdd
               );
             };
 
-            return category.accounts.map(renderRow);
+            if (category.id !== "invest") return category.accounts.map(renderRow);
+
+            const hasBrokers = category.accounts.some((a) => a.broker);
+            if (!hasBrokers) return category.accounts.map(renderRow);
+
+            const groups = new Map();
+            category.accounts.forEach((a) => {
+              const key = a.broker || t("unassignedBroker");
+              if (!groups.has(key)) groups.set(key, []);
+              groups.get(key).push(a);
+            });
+            const unassignedLabel = t("unassignedBroker");
+            const orderedBrokers = [...groups.keys()].sort((x, y) => (x === unassignedLabel ? 1 : y === unassignedLabel ? -1 : x.localeCompare(y)));
+
+            return orderedBrokers.map((brokerName) => {
+              const rows = groups.get(brokerName);
+              const groupSubtotal = rows.reduce((s, a) => s + a.value, 0);
+              return (
+                <div key={brokerName}>
+                  <div className="flex items-center justify-between px-4 py-1.5" style={{ background: COLORS.bg }}>
+                    <span style={{ fontFamily: "Inter", fontWeight: 600, fontSize: 11, color: COLORS.inkSoft, textTransform: "uppercase", letterSpacing: 0.5 }}>
+                      {brokerName} · {rows.length}
+                    </span>
+                    <span style={{ fontFamily: "IBM Plex Mono", fontSize: 11.5, color: COLORS.inkSoft }}>{formatDisplay(groupSubtotal)}</span>
+                  </div>
+                  {rows.map(renderRow)}
+                </div>
+              );
+            });
           })()}
           <div className="flex" style={{ borderTop: `1px solid ${COLORS.rule}` }}>
             {category.id === "invest" ? (
@@ -2171,6 +2287,11 @@ export default function App() {
     () => (categories ? Array.from(new Set(categories.flatMap((c) => c.accounts.filter((a) => a.isStock && a.tag).map((a) => a.tag)))).sort() : []),
     [categories]
   );
+  const investBrokers = useMemo(() => {
+    if (!categories) return [];
+    const invest = categories.find((c) => c.id === "invest");
+    return invest ? Array.from(new Set(invest.accounts.filter((a) => a.broker).map((a) => a.broker))).sort() : [];
+  }, [categories]);
   const hideCategory = (categoryId) => {
     const cat = categories.find((c) => c.id === categoryId);
     setHiddenCategoryIds((prev) => (prev.includes(categoryId) ? prev : [...prev, categoryId]));
@@ -2267,7 +2388,7 @@ export default function App() {
     const stockAccounts = categories.flatMap((c) => c.accounts.filter((a) => a.isStock).map((a) => ({ ...a, categoryId: c.id })));
     const autoAccounts = stockAccounts.filter((a) => a.priceSource !== "manual");
     const quotes = await Promise.all(autoAccounts.map(async (a) => {
-      const { price, source, attempts } = await fetchLiveQuote(a.ticker, a.market, apiKey, allTickToken);
+      const { price, source, attempts } = await fetchLiveQuote(a.ticker, a.market, apiKey || SHARED_FINNHUB_KEY, allTickToken);
       return { id: a.id, price, source, attempts };
     }));
     const quoteById = Object.fromEntries(quotes.map((q) => [q.id, q]));
@@ -2413,8 +2534,8 @@ export default function App() {
 
         <AccountTypeSheet open={typeSheetOpen} onClose={() => setTypeSheetOpen(false)} categories={categories} theme={themeById(themeId)} onPick={pickAccountType} />
         <AccountModal open={modal.open} initial={modal.initial} presetSubtype={modal.presetSubtype} categories={categories} rates={rates} onClose={closeModal} onSave={handleSaveAccount} onDelete={handleDeleteAccount}
-          onAddStockInstead={(categoryId) => { closeModal(); openAddStock(categoryId); }} />
-        <StockModal open={stockModal.open} categoryId={stockModal.categoryId} initial={stockModal.initial} rates={rates} onClose={closeStockModal} onSave={handleSaveStock} onDelete={handleDeleteAccount} existingTags={stockTags}
+          onAddStockInstead={(categoryId) => { closeModal(); openAddStock(categoryId); }} existingBrokers={investBrokers} />
+        <StockModal open={stockModal.open} categoryId={stockModal.categoryId} initial={stockModal.initial} rates={rates} onClose={closeStockModal} onSave={handleSaveStock} onDelete={handleDeleteAccount} existingTags={stockTags} existingBrokers={investBrokers}
           diagnostics={stockModal.initial ? syncDiagnostics[stockModal.initial.id] : null} />
         <SettingsModal open={settingsOpen} apiKey={apiKey} onClose={() => setSettingsOpen(false)} onSave={handleSaveApiKey} allTickToken={allTickToken} onSaveAllTick={handleSaveAllTickToken} themeId={themeId} onOpenTheme={() => { setSettingsOpen(false); setThemeOpen(true); }}
           categories={categories} hiddenCategoryIds={hiddenCategoryIds} onUnhide={unhideCategory} lang={lang} onSetLang={setLang} />
