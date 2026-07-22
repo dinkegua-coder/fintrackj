@@ -642,6 +642,19 @@ const seedSnapshots = (categories) => {
   return points;
 };
 
+// blank starter state — used for real first-time visitors so nobody sees
+// demo holdings (TSLA, HSBC, etc). Keeps the same 5 category shells so the
+// rest of the app (tabs, colors, add-account flows) works immediately, just
+// with zero accounts in each.
+const emptyCategories = () => [
+  { id: "cash", name: "Cash Equivalents", color: COLORS.sage, type: "asset", accounts: [] },
+  { id: "invest", name: "Investments", color: COLORS.slate, type: "asset", accounts: [] },
+  { id: "property", name: "Property", color: COLORS.amber, type: "asset", accounts: [] },
+  { id: "receivable", name: "Receivables", color: COLORS.stone, type: "asset", accounts: [] },
+  { id: "liability", name: "Liabilities", color: COLORS.clay, type: "liability", accounts: [] },
+];
+const emptySnapshots = () => [{ date: todayISO(), value: 0, byCategory: { cash: 0, invest: 0, property: 0, receivable: 0, liability: 0 } }];
+
 // ---- storage helpers -----------------------------------------------------
 async function loadState() {
   let categories, snapshots, apiKey, activities, themeId, hiddenCategoryIds;
@@ -703,8 +716,8 @@ async function loadState() {
     lang = DEFAULT_LANG;
   }
 
-  const cats = categories || seedCategories();
-  const snaps = snapshots || seedSnapshots(cats);
+  const cats = categories || emptyCategories();
+  const snaps = snapshots || (categories ? seedSnapshots(cats) : emptySnapshots());
   return { categories: cats, snapshots: snaps, apiKey: apiKey || "", activities: activities || [], themeId: themeId || DEFAULT_THEME_ID, hiddenCategoryIds: hiddenCategoryIds || [], iconThemed, allTickToken: allTickToken || "", lang: lang || DEFAULT_LANG };
 }
 
